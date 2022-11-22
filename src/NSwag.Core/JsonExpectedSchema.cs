@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="JsonExpectedSchema.cs" company="NSwag">
-//     Copyright (c) Rico Suter. All rights reserved.
+//     Copyright (c) Rico Suter. All rights reserved.test
 // </copyright>
 // <license>https://github.com/RicoSuter/NSwag/blob/master/LICENSE.md</license>
 // <author>Rico Suter, mail@rsuter.com</author>
