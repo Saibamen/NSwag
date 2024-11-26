@@ -336,11 +336,12 @@ namespace NSwag.Generation.AspNetCore
 
                     if (pathItem.ContainsKey(operation.Method))
                     {
-                        var conflictingApiDescription = addedOperations
-                            .First(t => t.Item1.Path == operation.Path && t.Item1.Method == operation.Method)
-                            .Item2;
+                        var conflictingApiDescriptions = operations
+                            .Where(t => t.Item1.Path == operation.Path && t.Item1.Method == operation.Method)
+                            .Select(t => t.Item2)
+                            .ToList();
 
-                        throw new InvalidOperationException($"The method '{operation.Method}' on path '{path}' is registered multiple times for actions {conflictingApiDescription.ActionDescriptor.DisplayName} and {apiDescription.ActionDescriptor.DisplayName}.");
+                        throw new InvalidOperationException($"The method '{operation.Method}' on path '{path}' is registered multiple times for actions {string.Join(", ", conflictingApiDescriptions.Select(apiDesc => apiDesc.ActionDescriptor.DisplayName))}.");
                     }
 
                     pathItem[operation.Method] = operation.Operation;
