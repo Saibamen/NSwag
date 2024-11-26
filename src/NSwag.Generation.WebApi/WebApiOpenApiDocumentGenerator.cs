@@ -222,7 +222,12 @@ namespace NSwag.Generation.WebApi
 
                     if (pathItem.ContainsKey(operation.Method))
                     {
-                        throw new InvalidOperationException($"The method '{operation.Method}' on path '{path}' is registered multiple times " +
+                        var conflictingOperationDisplayNames = operations
+                            .Where(t => t.Item1.Path == operation.Path && t.Item1.Method == operation.Method)
+                            .Select(t => GetDisplayName(controllerType, t.Item2))
+                            .ToList();
+
+                        throw new InvalidOperationException($"The method '{operation.Method}' on path '{path}' is registered multiple times for action {string.Join(", ", conflictingOperationDisplayNames)} " +
                             "(check the DefaultUrlTemplate setting [default for Web API: 'api/{controller}/{id}'; for MVC projects: '{controller}/{action}/{id?}']).");
                     }
 
@@ -232,6 +237,11 @@ namespace NSwag.Generation.WebApi
             }
 
             return addedOperations > 0;
+        }
+
+        private static string GetDisplayName(Type controllerType, MethodInfo method)
+        {
+            return $"{controllerType.FullName}.{method.Name} ({controllerType.Assembly.GetName().Name})";
         }
 
         private bool RunOperationProcessors(OpenApiDocument document, Type controllerType, MethodInfo methodInfo, OpenApiOperationDescription operationDescription,
